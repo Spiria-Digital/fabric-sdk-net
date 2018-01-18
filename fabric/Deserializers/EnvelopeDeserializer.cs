@@ -28,7 +28,7 @@ namespace fabricsdk.fabric.Deserializers
             }
         }
 
-        public int ValidationCode {get; private set;}
+        public byte ValidationCode {get; private set;}
 
         private ByteString _byteString;
         private WeakReference<Envelope> _envelope;
