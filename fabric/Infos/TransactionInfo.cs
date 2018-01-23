@@ -3,7 +3,7 @@ using fabricsdk.protos.common;
 using fabricsdk.protos.peer;
 using Google.Protobuf;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class TransactionInfo
     {

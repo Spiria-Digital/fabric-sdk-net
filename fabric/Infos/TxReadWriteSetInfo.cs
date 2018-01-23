@@ -5,7 +5,7 @@ using fabricsdk.protos.peer;
 using Google.Protobuf;
 using System;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class TxReadWriteSetInfo
     {

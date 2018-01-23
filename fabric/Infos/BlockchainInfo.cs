@@ -1,6 +1,6 @@
 using fabricsdk.protos.common;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class BlockchainInfo
     {

@@ -8,7 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class TransactionActionInfo
     {
@@ -95,12 +95,12 @@ namespace fabricsdk.fabric
             
         }
 
-        public ChaincodeEvent Event
+        public fabricsdk.fabric.Events.ChaincodeEvent Event
         {
             get
             {
                 if (IsFiltered)
-                    return new ChaincodeEvent(_filteredChaincodeAction.CcEvent.ToByteString());
+                    return new fabricsdk.fabric.Events.ChaincodeEvent(_filteredChaincodeAction.CcEvent.ToByteString());
 
                 return _transactionActionDeserializer
                     .GetPayloadDeserializer()

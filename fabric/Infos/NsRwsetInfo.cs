@@ -2,7 +2,7 @@ using fabricsdk.protos.ledger.rwset;
 using fabricsdk.protos.ledger.rwset.kvrwset;
 using Google.Protobuf;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class NsRwsetInfo
     {

@@ -4,7 +4,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using System;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal class TransactionEnvelopeInfo : EnvelopeInfo
     {

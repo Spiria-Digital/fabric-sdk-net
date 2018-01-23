@@ -4,7 +4,7 @@ using fabricsdk.protos.peer;
 using Google.Protobuf;
 using System;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     /**
         Information related to a Block.
@@ -122,7 +122,7 @@ namespace fabricsdk.fabric
                 switch ((int)_filteredBlock.FilteredTx[envelopeIndex].Type)
                 {
                     case (int)HeaderType.EndorserTransaction:
-                        ret = new TransactionEnvelopeInfo(_filteredBlock.FilteredTx[envelopeIndex], envelopeIndex);
+                        ret = new TransactionEnvelopeInfo(_filteredBlock.FilteredTx[envelopeIndex]);
                         break;
                     default: 
                         ret = new EnvelopeInfo(_filteredBlock.FilteredTx[envelopeIndex]);
@@ -136,7 +136,7 @@ namespace fabricsdk.fabric
                 switch (ed.Type)
                 {
                     case (int)HeaderType.EndorserTransaction :
-                        ret = new TransactionEnvelopeInfo((EndorserTransactionEnvDeserializer)ed, envelopeIndex);
+                        ret = new TransactionEnvelopeInfo((EndorserTransactionEnvDeserializer)ed);
                         break;
                     default :
                         ret = new EnvelopeInfo(ed);

@@ -63,7 +63,7 @@ namespace fabricsdk.fabric.Deserializers
             return ret;
         }
 
-        public ChaincodeEvent GetEvent()
+        public fabricsdk.fabric.Events.ChaincodeEvent GetEvent()
         {
             ChaincodeAction ca = GetChaincodeAction();
             ByteString eventsByte = ca.Events;
@@ -71,7 +71,7 @@ namespace fabricsdk.fabric.Deserializers
             if (eventsByte == null || eventsByte.IsEmpty)
                 return null;
 
-            return null/*new ChaincodeEvent(eventsByte) TODO : ChaincodeEventClass*/;
+            return new fabricsdk.fabric.Events.ChaincodeEvent(eventsByte);
         }
 
         public TxReadWriteSet GetResults()

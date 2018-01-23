@@ -2,10 +2,9 @@ using fabricsdk.fabric.Deserializers;
 using fabricsdk.protos.peer;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using fabricsdk.fabric.Transaction;
 using System;
 
-namespace fabricsdk.fabric
+namespace fabricsdk.fabric.Infos
 {
     internal enum EnvelopeType
     {
