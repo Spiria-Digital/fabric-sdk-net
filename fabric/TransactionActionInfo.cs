@@ -16,11 +16,12 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer
-                    .GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer().ResponseMessageBytes;
+                return IsFiltered ? null :
+                    _transactionActionDeserializer
+                        .GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer().ResponseMessageBytes;
             }
         }
 
@@ -28,12 +29,13 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer
-                    .GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer()
-                    .ResponseMessage;
+                return IsFiltered ? null :
+                    _transactionActionDeserializer
+                        .GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer()
+                        .ResponseMessage;
             }
         }
 
@@ -41,12 +43,13 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer
-                    .GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer()
-                    .ResponseMessageBytes;
+                return IsFiltered ? null :
+                    _transactionActionDeserializer
+                        .GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer()
+                        .ResponseMessageBytes;
             }
         }
 
@@ -54,12 +57,13 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer
-                    .GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer()
-                    .ResponseStatus;
+                return IsFiltered ? -1 :
+                     _transactionActionDeserializer
+                        .GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer()
+                        .ResponseStatus;
             }
         }
 
@@ -67,12 +71,13 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer
-                    .GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer()
-                    .ResponseStatus;
+                return IsFiltered ? -1 :
+                    _transactionActionDeserializer
+                        .GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer()
+                        .ResponseStatus;
             }
         }
 
@@ -80,11 +85,12 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return _transactionActionDeserializer.GetPayloadDeserializer()
-                    .GetChaincodeEndorsedActionDeserializer()
-                    .GetProposalResponsePayloadDeserializer()
-                    .GetChaincodeActionDeserializer()
-                    .Payload?.ToByteArray();
+                return IsFiltered ? null :
+                    _transactionActionDeserializer.GetPayloadDeserializer()
+                        .GetChaincodeEndorsedActionDeserializer()
+                        .GetProposalResponsePayloadDeserializer()
+                        .GetChaincodeActionDeserializer()
+                        .Payload?.ToByteArray();
             }   
             
         }
@@ -93,6 +99,9 @@ namespace fabricsdk.fabric
         {
             get
             {
+                if (IsFiltered)
+                    return new ChaincodeEvent(_filteredChaincodeAction.CcEvent.ToByteString());
+
                 return _transactionActionDeserializer
                     .GetPayloadDeserializer()
                     .GetChaincodeEndorsedActionDeserializer()
@@ -107,6 +116,9 @@ namespace fabricsdk.fabric
         {
             get
             {
+                if (IsFiltered)
+                    return 0;
+
                 if (!_chaincodeInputArgsCount.HasValue)
                 {
                     _chaincodeInputArgsCount = _transactionActionDeserializer
@@ -127,6 +139,9 @@ namespace fabricsdk.fabric
         {
             get
             {
+                if (IsFiltered)
+                    return 0;
+
                 if (_endorsementsCount.HasValue)
                 {
                     _endorsementsCount = _transactionActionDeserializer
@@ -138,8 +153,17 @@ namespace fabricsdk.fabric
             }
         }
 
+        public bool IsFiltered
+        {
+            get
+            {
+                return _filteredChaincodeAction != null;
+            }
+        }
+
 
         private TransactionActionDeserializer _transactionActionDeserializer;
+        private FilteredChaincodeAction _filteredChaincodeAction;
         private List<EndorserInfo> _endorserInfos = null;
 
         public TransactionActionInfo(TransactionActionDeserializer transactionActionDeserializer)
@@ -147,8 +171,16 @@ namespace fabricsdk.fabric
             _transactionActionDeserializer = transactionActionDeserializer;
         }
 
+        public TransactionActionInfo(FilteredChaincodeAction filteredChaincodeAction)
+        {
+            _filteredChaincodeAction = filteredChaincodeAction;
+        }
+
         public EndorserInfo GetEndorsementInfo(int index)
         {
+            if (IsFiltered)
+                return null;
+
             if (_endorserInfos == null)
             {
                 _endorserInfos = new List<EndorserInfo>();
@@ -170,6 +202,9 @@ namespace fabricsdk.fabric
          */
         public TxReadWriteSetInfo GetTxReadWriteSet()
         {
+            if (IsFiltered)
+                return null;
+
             TxReadWriteSet txReadWriteSet = _transactionActionDeserializer
                 .GetPayloadDeserializer()
                 .GetChaincodeEndorsedActionDeserializer()
@@ -181,6 +216,21 @@ namespace fabricsdk.fabric
                 return null;
 
             return new TxReadWriteSetInfo(txReadWriteSet);
+        }
+
+        public byte[] ChaincodeInputArgs(int index)
+        {
+            if (IsFiltered)
+                return null;
+
+            var input = _transactionActionDeserializer
+                .GetPayloadDeserializer()
+                .GetChaincodeProposalPayloadDeserializer()
+                .GetChaincodeInvocationSpecDeserializer()
+                .GetChaincodeInputDeserializer()
+                .GetChaincodeInput();
+
+            return input.Args[index].ToByteArray();
         }
     }
 }

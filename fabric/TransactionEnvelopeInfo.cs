@@ -1,4 +1,5 @@
 using fabricsdk.fabric.Deserializers;
+using fabricsdk.protos.peer;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using System;
@@ -12,22 +13,28 @@ namespace fabricsdk.fabric
         {
             get
             {
-                return (EndorserTransactionEnvDeserializer.GetPayloadDeserializer() as TransactionPayloadDeserializer).GetTransactionDeserializer().ActionsCount;
+                return IsFiltered ? _filteredTx.TransactionActions.ChaincodeActions.Count :
+                    (EndorserTransactionEnvDeserializer.GetPayloadDeserializer() as TransactionPayloadDeserializer).GetTransactionDeserializer().ActionsCount;
             }
         }
 
+        public TransactionEnvelopeInfo(FilteredTransaction filteredTx)
+            : base(filteredTx) { }
 
-        public TransactionEnvelopeInfo(EndorserTransactionEnvDeserializer endorserTransactionEnvDeserializer, int blockIndex)
-            :base(endorserTransactionEnvDeserializer, blockIndex)
+        public TransactionEnvelopeInfo(EndorserTransactionEnvDeserializer endorserTransactionEnvDeserializer)
+            :base(endorserTransactionEnvDeserializer)
         {
             EndorserTransactionEnvDeserializer = endorserTransactionEnvDeserializer;
             _headerDeserializer = EndorserTransactionEnvDeserializer.GetPayloadDeserializer().GetHeaderDeserializer();
         }
 
-        //TODO getTransactionActionInfoCount
-
         public TransactionActionInfo GetTransactionActionInfo(int index)
         {
+            if (IsFiltered)
+                return new TransactionActionInfo(
+                    _filteredTx.TransactionActions.ChaincodeActions[index]
+                );
+
             return new TransactionActionInfo(
                 (EndorserTransactionEnvDeserializer.GetPayloadDeserializer() as TransactionPayloadDeserializer)
                     .GetTransactionDeserializer().GetTransactionActionDeserializer(index)
